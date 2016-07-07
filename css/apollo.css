@@ -382,7 +382,7 @@ header .nav-list-item a {
     content: "#";
     color: #42b983;
     position: absolute;
-    left: -1.0em;
+    left: -0.7em;
     top: -4px;
     font-size: 1.2em;
     font-weight: bold
