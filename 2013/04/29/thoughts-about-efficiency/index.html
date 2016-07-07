@@ -1,0 +1,45 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 人的效率还是机器的效率？ · Bach is coding</title><meta name="description" content="人的效率还是机器的效率？ - winiex"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="stylesheet" href="http://fonts.useso.com/css?family=Source+Sans+Pro:400,600" type="text/css"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/winiex" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">人的效率还是机器的效率？</h1><div class="post-info">Apr 29, 2013</div><div class="post-content"><img src="http://o9fv3ui6e.bkt.clouddn.com/b1029352-3ca6-11e6-b50f-9bf2fabacd6c.png" class="center">
+<p>“代码是写给人看的，而机器码才是给机器看的。”</p>
+<p>在给新生进行的培训课程上面，我又一次给尚未对编码世界有任何了解的同学做了如上的阐述，字字铿锵有力，不带半点犹豫。</p>
+<p>想想看来，作为一个现在很多书上都会提到的观点，上面那句话已经成为了像我一样刚入编码世界不久，但是认识不深，却又渴望找寻公理的后生们公认的不二法门了。</p>
+<a id="more"></a>
+<p>于是，我们在平时编写代码的过程中便不断提醒自己，“代码是写给人看的”，所以我们的代码会很服服贴贴地遵循一些大家公认的，会让代码变得更易让人看懂的“规矩”——代码风格、编程范式甚至框架约束等等。</p>
+<p>可这几天转念一想，这句话里面偏偏很可能存在着某种谬论吧。</p>
+<p>暂时先不提这个谬论，我们先来举举现实生活中的例子——这样待会提出这个我觉得有些谬误的谬论的时候，你才不会在思维惯性之下，立马认为我这是一纸胡诌。</p>
+<p>人类可以超脱于其他生物而成为这个星球的最大、最强的宿主，很大的一个原因就是因为我们会利用各种工具。</p>
+<p>古老的牛车、现代的车床等等，都是很经典的工具。但是我们有没有在这些工具上面听到过这类言论呢——为了保证驾驶牛车的农夫的舒适度，我们可以把给牛车配 备的装备的质量降低一些，再把这些节约下来的开支用来给农夫买一个更舒适的牛车坐垫；为了保证车床车工工作的效率，我们可以让车床本身执行一些不必要的操 作——例如让它运行的转速比标准的更慢一些，好让车工能够更精细地操作他的仪器。</p>
+<p>据我所知，在这些比较成熟的工具中（至少存在的历史长于计算机），类似于上述的说法往往是比较荒谬的——因为如果按照上面的说法去进行所谓的提高人工作效率的改变，那往往我们的活儿就没法按时干完了。</p>
+<p>而在软件开发这个行业中，我们一直在走上面所述的在其他领域看来比较荒谬的路——我们一路过来都在把软件开发变成一种对人而言的更为舒适，更为高效的工作，但是却一直都没有把机器工作的效率的提高作为我们的主要发展目标之一。</p>
+<p>这便是我刚才提到的让我有些疑惑的“谬论”。</p>
+<p>让我们看看编程语言的发展路线，便能够更进一步了解这种趋势了。首先我们早期的程序员在纸带上打下一行行代表机器码的孔洞，然后交给机器处理；接着我们发 明了机器码的对应符号语言——汇编语言，让我们走出了“用硬件编写软件”的时代——但是我们终于和原原本本的机器之间有了汇编器这个隔阂；然后我们还是不 满足，发明了抽象层次更高的 C 语言、Pascal 语言等中低级语言，而且后来为了迎合 Object Oriented Programing 的范式，发明了 C++——这些工作让我们的代码和机器之间有了编译器和汇编器两层隔阂；接着我们又发明了 Java、C# 这些平台化的语言，于是这些隔阂里面又多了一层解释器；更为近期的动态是，我们发明了完全解释执行的语言——例如 perl、ruby、python 等，而这时我们的代码和机器之间加上了最为笨重的解释执行器；最为极端的是DSL，领域专属语言，例如 SQL——我们甚至都不再告诉机器该怎么做了，而仅仅告诉机器做什么即可（Don’t tell the machine how, just tell the machine what.）——而此时，我们和机器之间的距离就如同在摩天大厦水泥楼顶的人和地面沃土之间的距离了。</p>
+<p>是的，我们一直都在努力，让人的效率变的更高——这么做的代价是让机器的工作效率变的更低。</p>
+<p>不知道大家听说过安迪-比尔定律没有。</p>
+<p>这个定律是目前IT业界发展遵循的三大定律的之一——其他两个定律分别是大名鼎鼎的摩尔定律和它的反定律，反摩尔定律。</p>
+<p>安迪-比尔定律中的安迪指的是 Intel 公司的总裁安迪格罗夫，而比尔就指的是大家都认识的比尔盖茨。定律最简明的阐述是：安迪提供了什么，比尔就拿走了什么。</p>
+<p>什么意思呢？</p>
+<p>一句话概括来说，安迪的 Intel 公司遵循摩尔定律给IT业界带来的 18 个月翻番的计算能力，都被比尔盖茨的新版 Windows 占有、拿走了。</p>
+<p>更通俗点讲，为什么我们需要不停的更新电脑来为微软的最新操作系统铺路呢？为什么和我们两年之前的电脑相比有两倍多的计算能力的新电脑，在今天却还是仅仅只能刚好配的上最新的 Windows——甚至是很勉强的那种呢？</p>
+<p>答案很简单——比尔拿走了安迪费了好大力气整过来的计算能力，而且是以一种很鲁莽的方式——和以前相比越来越低效的、越来越不机器友好的代码。</p>
+<p><a href="http://book.douban.com/subject/6709783/" target="_blank" rel="external">据传闻</a>，比尔本人也对他的员工发过类似的牢骚——“我早年用汇编搞的 Basic，整个环境也就三百多 k，而你们现在搞的 .NET，大约三百多兆。但是 .NET 真的相对于 Basic 强了一千多倍吗？显然不是。”（如此一说或许真的只在传闻中可得，单单如此来评判编程环境或者系统，是很不公允的。）</p>
+<p>跟着我的叙述，你也应该开始在心目中形成了一种观点——确实，我们软件开发的发展道路过于有些倾向于人的工作效率了——人在这个领域中被溺爱了，而同样很 重要的工具本身被我们打入冷宫，成为了第二个考虑的因素。这个观点的正确与否我们姑且不予置评，但我们应该了解的是它必然存在一定的说服力。</p>
+<p>那现在就引出了一个问题——究竟是人的效率，还是机器的效率更重要？</p>
+<p>关于这个问题，或许会像一些本身就无法下定论的问题一样，大家分成两派，然后进行激烈的讨论甚至辩驳——然而终究是得不出一个一锤子钉死的结论的。</p>
+<p>如果这个问题本身就有它的争执性的话，那我就姑且不班门弄斧说自己是哪个门派的了，我就仅仅阐述自己的几个比较原则性的观点吧。</p>
+<p>第一个是中庸，抑或可以被称之为平衡。如果一个事物有两个都不能割舍的而且相互对立的方面的话，那这个事物发展下去，最终只有一个结果——它们找到平衡，从而让这个事物稳定下来，找到最终的形态。</p>
+<p>第二个来自敏捷宣言，人和交互重于过程和工具。</p>
+<p>第三个是我的 c 语言老师的名言——年轻人要有恒心，敢于深入底层，并知道机器在做什么。你机器在做什么都不知道，那你何来机器跑起来很舒服的代码？</p>
+<p>虽然说我不表达我的支持的论点，但是我想你也应该对我不言自明的想法有一定的了解了吧？</p>
+<p>那，人的效率和机器的效率各自的重要性，你是怎么看的呢？</p>
+<p>###备注</p>
+<p>这篇文章是我大概在两年前所写，当时对于编程语言的了解还是不够深刻，所以文章中存在诸多不够成熟的观点。但文章主旨所关心的机器和人之间的效率权衡问题，现在我还是觉得很值得思考。</p>
+</div></article></div></section><footer><div class="paginator"><a href="/2013/05/10/what-personalities-should-multi-field-experts-have/" class="prev">PREV</a><a href="/2013/04/25/learning-simplecv-the-basics/" class="next">NEXT</a></div><div data-thread-key="2013/04/29/thoughts-about-efficiency/" data-title="人的效率还是机器的效率？" data-url="http://bachiscoding.com/2013/04/29/thoughts-about-efficiency/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"bachiscoding"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><div class="copyright"><p>© 2015 - 2016 <a href="http://bachiscoding.com">winiex</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script></body></html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 在 Mac OS X 上修改 Microsoft Natural Ergonomic 4000 的 Zoom 键为 Scroll 键 · Bach is coding</title><meta name="description" content="在 Mac OS X 上修改 Microsoft Natural Ergonomic 4000 的 Zoom 键为 Scroll 键 - winiex"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="stylesheet" href="http://fonts.useso.com/css?family=Source+Sans+Pro:400,600" type="text/css"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/winiex" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">在 Mac OS X 上修改 Microsoft Natural Ergonomic 4000 的 Zoom 键为 Scroll 键</h1><div class="post-info">Oct 19, 2014</div><div class="post-content"><h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>因为和 Microsoft Natural Ergonomic 4000 配套使用的驱动 IntelliType Pro for Mac 是<strong>微软开发的 Mac OS X 驱动程序</strong>，所以在功能上它是有一定的残疾度的——譬如它不能在开机的时候自动加载用户配置（= =），进而在开机后你无法使用设置好的相关驱动配置。你有三个选择：</p>
+<ol>
+<li>删掉它。</li>
+<li>每次开机的时候都点击一次配置程序（系统偏好设置 &gt; Microsoft Keyboard）从而加载配置。</li>
+<li>使用 Launchd 在开机的时候，每次都执行一次 “open /Library/PreferencePanes/Microsoft\ Keyboard.prefPane” 命令从而加载相关配置。</li>
+</ol>
+<a id="more"></a>
+<p>第三种选择的具体步骤如下：</p>
+<p>Launchd 的启动脚本内容如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><br><span class="line"><span class="meta">&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plist</span> <span class="attr">version</span>=<span class="string">"1.0"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>KeepAlive<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">key</span>&gt;</span>SuccessfulExit<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">false</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>Label<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span>&gt;</span>com.bachiscoding.loadmicrosoftkeyboardsettings<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>ProgramArguments<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">array</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">string</span>&gt;</span>open /Library/PreferencePanes/Microsoft\ Keyboard.prefPane<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">array</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>RunAtLoad<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plist</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>进入 ~/Library/LaunchAgents 目录：cd ~/Library/LaunchAgents/。这个目录保存了你个人的 launchd 启动脚本。</li>
+<li>新建 com.microsoft.ijustloadsettingsforyoumicrosoft.plist 文件。</li>
+<li>在新建的上述文件中加入方才提供的自启动脚本内容，并保存。</li>
+<li>重启验证成功与否。</li>
+</ol>
+<p>关于是否使用这款<strong>微软开发的 Mac OS X 驱动程序</strong>，以及如何删除掉这货，你还可以参考<a href="http://david.rothlis.net/keyboards/microsoft_natural_osx/" target="_blank" rel="external">这篇文章</a>。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>作为程序员，我平时接触的最多的工具就是键盘了。有时候，一天可能会有三、四个小时在敲击键盘。工欲善其事，必先利其器，为了保证一定的效率和<a href="http://en.wikipedia.org/wiki/Repetitive_strain_injury" target="_blank" rel="external">身体的健康</a>（<a href="http://pyvideo.org/video/1735/using-python-to-code-by-voice" target="_blank" rel="external">解决之道</a>），对于键盘的要求还是得有啊。</p>
+<p>我现在长期使用的键盘是 <a href="http://www.microsoft.com/hardware/en-us/p/natural-ergonomic-keyboard-4000" target="_blank" rel="external">Microsoft Natural Ergonomic 4000</a>：</p>
+<img src="http://o9fv3ui6e.bkt.clouddn.com/2fcf5f6c-3ca7-11e6-a720-eb6b4f6532f4.png" class="center" width="600">
+<p>我是从 <a href="http://blog.codinghorror.com/keyboarding-microsoft-natural-ergonomic-4000/" target="_blank" rel="external">Jeff Atwood 的博客文章</a>中第一次了解到这款键盘的。这款键盘是一款人体工程学键盘，它的左半部分和右半部分的键之间是分开的，这样就可以让键盘中部适度突出，从而保证左右手的按键键程的合理。在键盘的中间，放置了一个 Zoom 键，所以你可以使用它对于需要缩放的内容进行缩放。在键盘的顶部，还有许多功能键可以自行定义。键盘的腕托使用了人造皮革，当你输入的时候，手腕不会像一些机械键盘一样悬空的同时，也比较舒适。</p>
+<p>还在读大学的时候，我在宿舍里使用的键盘就是这个系列的了。去年 9 月份给公司的程序员兄弟们集体采购键盘的时候，给大家推荐的也是这款 4000 型号的键盘。在后来的大量编码工作中，我都是用的它。用这款键盘长时间打字我没有感到手累过，一直对它挺满意。</p>
+<p>比较有意思的是这块键盘中间的那个 Zoom 键。正如方才介绍的，它的功能是用来对内容进行放大、缩小的。然而我第一次见到这个键的时候，对它的期待是可以做类似于滚动网页内容这类工作的快捷键。然而设计师的想法可能和我的不一样，最终它的默认功能是放大、缩小。</p>
+<p>这个默认放大、缩小的 Zoom 键本身功能对于我确实有些鸡肋，我要让它变成一个 Scroll 键。这样的话，用它就可以愉快地浏览网页了——比 Vimium 插件的 j、k 键用起来还拉风。</p>
+<p>由于这款键盘的使用者和喜爱者众多，这个问题已经有很多人解决了。在 Windows 上，只需要参考 <a href="http://coolshell.cn/articles/2097.html" target="_blank" rel="external">Coolshell 上的这篇文章即可</a>。在 Mac OS X 或者 Linux 上，你可以参考<a href="http://blog.philippklaus.de/2012/05/microsoft-natural-ergonomic-keyboard-4000-with-mac-os-x-and-linux/" target="_blank" rel="external">这篇文章</a>。</p>
+<p>我在自己的 Mac OS X 10.10 上进行了尝试，最终获得了满意的结果。具体的步骤如下：</p>
+<ol>
+<li>在 Microsoft Natural Ergonomic 4000 的<a href="http://www.microsoft.com/hardware/en-us/p/natural-ergonomic-keyboard-4000#support" target="_blank" rel="external">Support 页面</a>中下载 IntelliType Pro for Mac 驱动程序。</li>
+<li>安装 IntelliType Pro for Mac 驱动程序。</li>
+<li>进入 ~/Library/Preferences 文件夹：cd ~/Library/Preferences</li>
+<li>备份原始的配置文件：mv com.microsoft.keyboard.pref com.microsoft.keyboard.pref.bak。如果没有该文件可以跳过这步。</li>
+<li>下载修改后的配置文件：wget <a href="http://scottbezek.com/com.microsoft.keyboard.pref" target="_blank" rel="external">http://scottbezek.com/com.microsoft.keyboard.pref</a></li>
+<li>打开 IntelliType Pro for Mac 驱动程序的配置程序：open /Library/PreferencePanes/Microsoft\ Keyboard.prefPane</li>
+</ol>
+<p>完成了这些工作后，你可以打开一个网页，尝试上下推一下 Zoom 键，不出意外的话网页就会跟着一起滚动了。</p>
+<p>当然工作还没有完。安装了 IntelliType Pro for Mac 后，我的 Meta 和 Alt 在键盘上发生了交换。如果你也和我一样，可以在 IntelliType Pro for Mac 驱动程序的键盘配置程序(系统偏好设置 &gt; Microsoft Keyboard)中进行设置：</p>
+<img src="http://o9fv3ui6e.bkt.clouddn.com/393075d2-3ca7-11e6-a01e-bb203f7a6b74.png" class="center" width="600">
+<p>尝试勾选 Options 选项中的“Swap Windows and Alt keys”直到符合你的习惯即可。</p>
+<p>另外，IntelliType Pro for Mac 还会改变鼠标中键点击的默认行为——用中键点击 Chrome 中的链接的后不再是新标签打开页面，而是换到下一个程序的窗口。同样的，你可以在 IntelliType Pro for Mac 驱动程序的鼠标配置程序（系统偏好设置 &gt; Microsoft Mouse）中进行设置：</p>
+<img src="http://o9fv3ui6e.bkt.clouddn.com/43f735a0-3ca7-11e6-8bf4-2f782d4f670c.png" class="center" width="600">
+<p>点击 Buttons 页面中的“Wheel Button”，然后将“Select a command”改为“Handled by Mac OS”即可恢复为以前的行为。</p>
+<p>利用这些配置工具，你还可以将 Caps Lock 改为左 Ctrl 键，也可以自己配置 Key Binding 和 Favorite Key 等。更多的功能就等你去探索了。</p>
+<h2 id="关于键盘的一些内容"><a href="#关于键盘的一些内容" class="headerlink" title="关于键盘的一些内容"></a>关于键盘的一些内容</h2><p>在最后，给大家推荐一些和键盘相关的内容：</p>
+<ol>
+<li>李杀网键盘区：<a href="http://xahlee.info/kbd/keyboarding.html" target="_blank" rel="external">http://xahlee.info/kbd/keyboarding.html</a></li>
+<li>Have Keyboard, Will Program：<a href="http://blog.codinghorror.com/have-keyboard-will-program/" target="_blank" rel="external">http://blog.codinghorror.com/have-keyboard-will-program/</a></li>
+<li>键盘恐慌：<a href="http://ipn.li/kernelpanic/2/" target="_blank" rel="external">http://ipn.li/kernelpanic/2/</a></li>
+<li>Mechanical Keyboards：<a href="https://mechanicalkeyboards.com/index.php" target="_blank" rel="external">https://mechanicalkeyboards.com/index.php</a></li>
+</ol>
+</div></article></div></section><footer><div class="paginator"><a href="/2014/10/21/the-way-of-becoming-a-newbie-designer/" class="prev">PREV</a><a href="/2014/10/16/bash-function-to-get-gitignore-easily/" class="next">NEXT</a></div><div data-thread-key="2014/10/19/microsoft-natural-ergonomic-keyboard-4000-zoom-to-scroll-on-mac-os-x/" data-title="在 Mac OS X 上修改 Microsoft Natural Ergonomic 4000 的 Zoom 键为 Scroll 键" data-url="http://bachiscoding.com/2014/10/19/microsoft-natural-ergonomic-keyboard-4000-zoom-to-scroll-on-mac-os-x/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"bachiscoding"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><div class="copyright"><p>© 2015 - 2016 <a href="http://bachiscoding.com">winiex</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script></body></html>

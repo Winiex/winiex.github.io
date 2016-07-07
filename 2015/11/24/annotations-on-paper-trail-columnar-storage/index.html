@@ -1,0 +1,170 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 【译注】Columnar Storage - 列式存储 · Bach is coding</title><meta name="description" content="【译注】Columnar Storage - 列式存储 - winiex"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="stylesheet" href="http://fonts.useso.com/css?family=Source+Sans+Pro:400,600" type="text/css"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/winiex" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">【译注】Columnar Storage - 列式存储</h1><div class="post-info">Nov 24, 2015</div><div class="post-content"><h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><p>最近一段时间，我主要在构建公司的数据决策系统。依照规划，公司内部打算在 Hadoop 集群上借助 Impala 来实现一个近实时化的 SQL 执行环境，让它来提供数据查询接口给前端报表系统。这套系统的基础思想来自 Google 于 2010 年发表的一篇 paper：<a href="http://research.google.com/pubs/pub36632.html" target="_blank" rel="external">Dremel - Interactive Analysis of Web-Scale Datasets</a>。</p>
+<p>要降低查询的延时，涉及到了一系列的优化手段，其中列式存储的方案便是其一。这篇文章便是我在学习的过程中看到的，质量上乘，便翻译下来。</p>
+<blockquote>
+<p>Origin: <a href="http://the-paper-trail.org/blog/columnar-storage/" target="_blank" rel="external">http://the-paper-trail.org/blog/columnar-storage/</a></p>
+</blockquote>
+<p>原文地址：<a href="http://the-paper-trail.org/blog/columnar-storage/" target="_blank" rel="external">http://the-paper-trail.org/blog/columnar-storage/</a></p>
+<a id="more"></a>
+<h2 id="译注"><a href="#译注" class="headerlink" title="译注"></a>译注</h2><blockquote>
+<p><em>You’re going to hear a lot about columnar storage formats in the next few months, as a variety of distributed execution engines are beginning to consider them for their IO efficiency, and the optimisations that they open up for query execution. In this post, I’ll explain why we care so much about IO efficiency and show how columnar storage – which is a simple idea – can drastically improve performance for certain workloads.</em></p>
+</blockquote>
+<p><em>在接下来的几个月里，随着一系列分布式执行引擎们因为它们（在一些特定场景下）带来的高效 IO 特性以及为检索执行带来优化的可能性而开始考虑（引入）它们，列式存储这四个字将会常常出现在你的视野中。在这篇文章中，我将对为何我们对 IO 效率如此关心作出解释，并且将列式存储——其实就是一个很简单的想法——在一些场景下能够显著的提高性能的原理展示给你看。</em></p>
+<blockquote>
+<p><em>Caveat: This is a personal, general research summary post, and as usual doesn’t neccessarily reflect our thinking at Cloudera about columnar storage.</em></p>
+</blockquote>
+<p><em>须知：这是一篇仅包含个人观点的普通研究归纳总结文，正如以前的文章一样，并没有反映 Cloudera 对于列式存储的想法。</em></p>
+<blockquote>
+<p>Disks are still the major bottleneck in query execution over large datasets. Even a machine with twelve disks running in parallel (for an aggregate bandwidth of north of 1GB/s) can’t keep all the cores busy; running a query against memory-cached data can get tens of GB/s of throughput. IO bandwidth matters. Therefore, the best thing an engineer can do to improve the performance of disk-based query engines (like RDBMs and Impala) usually is to improve the performance of reading bytes from disk. This can mean decreasing the latency (for small queries where the time to find the data to read might dominate), but most usually this means improving the effective throughput of reads from disk.</p>
+</blockquote>
+<p>在大规模数据集的场景下，磁盘依然是检索执行过程中的主要性能瓶颈。就算一台拥有十二块并行运行的硬盘的机器（合起来在北桥的能提供的 IO 带宽有 1GB/s）也不能让所有 CPU 核心保持在繁忙的状态；运行一个内存上数据的检索却可以轻易地带来数十 GB/s 的吞吐量。（磁盘的）IO 带宽实在是性能杀手。因此，一个工程师在优化基于磁盘的 query engine（类似 RDBM 或者 Impala 那样的）的性能时，能做的最好的事情通常就是提高从磁盘读取字节时的性能。这可能就意味着降低延时（对于（结果数据量）小的查询而言，时间主要耗在了从磁盘找到那份需要读取出来的数据，亦即寻道），不过也更可能意味着提高从磁盘读取数据的<strong><em>有效吞吐量</em></strong>。</p>
+<blockquote>
+<p>The traditional way to improve disk bandwidth has been to wait, and allow disks to get faster. However, disks are not getting faster very quickly (having settled at roughly 100 MB/s, with ~12 disks per server), and SSDs can’t yet achieve the storage density to be directly competitive with HDDs on a per-server basis.</p>
+</blockquote>
+<p>提高磁盘带宽的传统方法一直是等待，然后得到更快的磁盘。然而，磁盘变快的速度并非如人愿（已经有一段时间停滞在 100 MB/s 这里了，我是说在一台拥有约 12 块磁盘的机器上），并且，在单台服务器的维度下，SSD 磁盘也暂时还不能在数据存储密度上拥有和 HDD 磁盘直接抗衡的实力。</p>
+<blockquote>
+<p>The other way to improve disk performance is to maximise the ratio of ‘useful’ bytes read to total bytes read. The idea is not to read more data than is absolutely necessary to serve a query, so the useful bandwidth realised is increased without actually improving the performance of the IO subsystem. Enter columnar storage, a principle for file format design that aims to do exactly that for query engines that deal with record-based data.</p>
+</blockquote>
+<p>另一种提高磁盘性能的方法是最大化从磁盘读取出的数据中“有效”数据的占比。这个想法是，不去读取对于一次检索而言多余的那些数据，进而在 IO 子系统实际上并没有性能提升的情况下提高有效带宽。这就引出了列式存储——一种旨在精准地为和数据记录打交道的 query engine 提供这种优化的文件存储格式。</p>
+<blockquote>
+<h3 id="Columns-vs-Rows"><a href="#Columns-vs-Rows" class="headerlink" title="Columns vs. Rows"></a>Columns vs. Rows</h3></blockquote>
+<h3 id="列和行"><a href="#列和行" class="headerlink" title="列和行"></a>列和行</h3><blockquote>
+<p>Traditional database file format store data in rows, where each row is comprised of a contiguous collection of column values. On disk, that looks roughly like the following:</p>
+</blockquote>
+<p>在传统的数据库系统中，数据都被以行的形式存储下来，而每一行都由紧密相连的一列一列的值组成。落地到磁盘上，这些数据大概看起来和下图类似：</p>
+<p><img src="http://o9fv3ui6e.bkt.clouddn.com/d429b854-3ca8-11e6-a964-6b509b00945d.png" alt="行式存储在磁盘上的样子"></p>
+<blockquote>
+<p>This row-major layout usually has a header for each row that describes, for example, which columns in the row are NULL. Each column value is then stored contiguously after the header, followed by another row with its own header, and so on.</p>
+</blockquote>
+<p>这种一行一行的布局通常都有一个“头”来描述在这一行里哪些列存储的值是 NULL。然后这一行每一列的值再相邻地跟在“头”后面，（这样一行的数据便存储完毕，）接下来便是下一行的数据，依此类推。</p>
+<blockquote>
+<p>Both HDDs and SSDs are at their most efficient when reading data sequentially from disk (for HDDs the benefits are particularly pronounced). In fact, even a read of a few bytes usually brings in an entire block of 4096 bytes from disk, because it is effectively the same cost to read (and the operating system usually deals with data in 4k page-sized chunks). For row-major formats it’s therefore most efficient to read entire rows at a time.</p>
+</blockquote>
+<p>HDD 和 SSD 都在顺序从磁盘读取数据的时候效率最高（尤其是对于 HDD 来说）。事实上，就算仅仅只是读取几个字节，也会从磁盘上读取一整个 4096 字节大小的区块，这是因为两者读取的效率其实一样（而且操作系统通常以 4 KB 大小的页来处理数据）。因此对以行形式存储的数据来说一次读取一整行是效率最高的。</p>
+<blockquote>
+<p>Queries that do full table-scans – i.e. those that don’t take advantage of any kind of indexing and need to visit every row – are common in analytical workloads; with row-major formats a full scan of a table will read every single byte of the table from disk. For certain queries, this is appropriate. Trivially, SELECT * FROM table requires returning every single column of every single row in the table, and so the IO costs for executing that query on a row-major format are a single-seek and a single large contiguous read (although that is likely to be broken up for pipelining purposes). The read is unavoidable, as is the single seek; therefore row-major formats allow for optimal IO usage. More generally, SELECT \<col\_set\> FROM table WHERE \<predicate\_set\> will be relatively efficient for row-major formats if either a) evaluating the predicate_set requires reading a large subset of the set of columns or b) col_set is a large subset of the set of columns (i.e. the projectivity is high) and the set of rows returned by the evaluation of the predicates over the table is a large proportion of the total set of rows (i.e. the selectivity is high). More simply, a query is going to be efficient if it requires reading most of the columns of most of the rows. In these cases, row-major formats allow the query execution engine to achieve good IO efficiency.</predicate\_set\></col\_set\></p>
+</blockquote>
+<p>在分析的工作中，那些对整张表，亦即那些没有利用任何形式的索引从而需要访问每一行数据的查询是很常见的；在以行为主的存储形式下，一次全检索将会从磁盘中把目标表的所有数据都读取出来。对于特定的一些查询来说，这样是没有问题的。特别地，例如，SELECT * FROM 一张表的查询语句需要这张表里面的每一行数据，因此在行式存储的情况下执行那次查询的 IO 操作就是一次在磁盘上的连续的单次寻道、读取过程（尽管这些操作有可能会被把数据导向管道的目的打断）。正因只需要一次寻道，这种读取过程是不可避免的；因而基于行的存储形式便让最优的 IO 操作成为可能。又如，一些更常见的检索——“SELECT \<col\_set\> FROM table WHERE \<predicate\_set\>”，如果达到 a) 执行&lt;筛选条件&gt;时需要读取所有列里面的大多数，或者 b) &lt;某些列&gt; 包含了所有列里面的大多数（亦即，projectivity 较高）并且执行检索后返回的行囊括了所有行的大多数的时候（亦即，selectivity 较高）这两个条件的其中之一时，在行式存储下效率会比较高。简而言之，（在行形式的存储下）一个检索如果需要读取大部分的数据时，效率会比较高。在这些例子里，行形式的存储让检索执行引擎获得了更高的 IO 效率。</predicate\_set\></col\_set\></p>
+<blockquote>
+<p>However, there is a general consensus that these SELECT * kinds of queries are not representative of typical analytical workloads; instead either a large number of columns are not projected, or they are projected only for a small subset of rows where only a few columns are required to decide which rows to return. Coupled with a general trend towards very wide tables with high column counts, the total number of bytes that are required to satisfy a query are often a relatively small fraction of the size on disk of the target table. In these cases, row-major formats often are quite wasteful in the amount of IO they require to execute a query.</p>
+</blockquote>
+<p>然而，有一种主流的观点认为，这些类似 SELECT * 的检索在典型的分析任务的场景下并不具备代表性；取而代之的是（在分析任务的场景下）检索只映射很小一部分的列，或者只有一小部分的行、列决定了哪些行被返回。再考虑到表正在变的行和列都很多的趋势，（我们可以发现）满足一个检索的数据量经常是目标表在磁盘上总数据的很小的一部分。在这些场景下，行式存储便因为执行检索时过度的 IO 操作而显得很浪费。</p>
+<blockquote>
+<p>Instead of a format that makes it efficient to read entire rows, it’s advantageous for analytical workloads to make it efficient to read entire columns at once. Based on our understanding of what makes disks efficient, we can see that the obvious approach is to store columns values densely and contiguously on disk. This is the basic idea behind columnar file formats. The following diagram shows what this looks like on disk:</p>
+</blockquote>
+<p>与其用一种针对读取全部行效率较高的存储方式，对于分析工作而言，不如用一种针对读取全部列效率较高的存储方式来的要好。基于对什么让磁盘读取效率高的理解，我们可以看到，将列上的值直接紧密地存储在磁盘上是一种最直接的解决方法。这就是列式存储背后的基本思想。下面的这幅图展示了列式存储在磁盘上看起来的样子：</p>
+<p><img src="http://o9fv3ui6e.bkt.clouddn.com/dcdd9dc6-3ca8-11e6-a2bb-83da029513d1.png" alt="列式存储在磁盘上的样子"></p>
+<blockquote>
+<p>A row is split across several column blocks, which may even be separate files on disk. Reading an entire column now requires a single seek plus a large contiguous read, but the read length is much less than for extracting a single column from a row-major format. In this figure we have organised the columns so that they are all ordered in the same way; later we’ll see how we can relax that restriction and use different orderings to make different queries more efficient.</p>
+</blockquote>
+<p>一行被切分开来并分布于几个“列块”，甚至会分布于磁盘上不相干的两个文件上。读取一整列的数据现在只需要一次寻道并加上一次大量的、连续的读操作，但读取的长度比从行形式存储的数据中获取到目标列的读取长度要少上很多。在上面的图中那些列（按照一定的规则）已经组织好了，所以它们都以相同的形式排列着；后面我们还会讲到通过放松限制并且使用不同的排序方式，可以让不同类型的检索变的高效。</p>
+<blockquote>
+<h3 id="Query-Execution"><a href="#Query-Execution" class="headerlink" title="Query Execution"></a>Query Execution</h3></blockquote>
+<h3 id="检索执行"><a href="#检索执行" class="headerlink" title="检索执行"></a>检索执行</h3><blockquote>
+<p>The diagram below shows what a simple query plan for SELECT col_b FROM table WHERE col_a &gt; 5 might look like for a query engine reading from a traditional row-major file format. A scan node reads every row in turn from disk, and streams the rows to a predicate evaluation node, which looks at the value of col_a in each row. Those rows that pass the predicate are sent to a projection node which constructs result tuples containing col_b.</p>
+</blockquote>
+<p>如下的图展示了，在基于传统的行式存储的情况下，一个 query engine 是怎样为类似于“SELECT col_b FROM table WHERE col_a &gt; 5”这样的检索的建立 query plan 的。一个 scan node 依次读取磁盘上的每一行数据，然后将每一行的数据以流的方式交给 predicate evaluation node，后者则会检查一下每行中列 col_a 的值。那些经过筛选条件检测的行则会被送往一个创建包含 col_b 的结果元组的 projection node 那边。</p>
+<p><img src="http://o9fv3ui6e.bkt.clouddn.com/e555a8b8-3ca8-11e6-98c4-cb06ae9deb10.png" alt="行式存储上检索的执行计划"></p>
+<blockquote>
+<p>Compare that to the query plan below, for a query engine reading from columnar storage. Each column referenced in the query is read independently. The predicate is evaluated over col_a to produce a list of matching row IDs. col_b is then scanned with respect to that list of IDs, and each matching value is returned as a query result. This query plan performs two IO seeks (to find the beginning of both column files), instead of one, and issues two consecutive reads rather than one large read. The pattern of using IDs for each column value is very common to make reconstructing rows easier; usually columns are all sorted on the same key so the Nth value of col_a belongs to the same row as the Nth value of col_b.</p>
+</blockquote>
+<p>我们把刚才的 query plan 来和下面的这个——基于列式存储的——比较一下。在检索中所引用到的每一列都被独立地读取。在 col_a 上的筛选条件被 predicate eval 阶段处理后产出一系列满足条件的列 ID。然后每个满足这些列 ID 的 col_b 则会被当做结果返回。这个检索执行计划进行了两次 IO 寻道（这是为了找到两个列存储文件的起始磁道），而非（之前那个的）一次，并且进行了两次连续的（小数据量的）读取，而非一次大数据量的读取。在每个列的值上标记 ID 的模式是一种更方便地重建行常见手段；通常列上的值都以相同的排序方式来存储，这样一来 col_a 列上存储的第 N 个值同一行的 col_b 列的值也是 col_b 列上存储的第 N 个。</p>
+<p><img src="http://o9fv3ui6e.bkt.clouddn.com/ed784028-3ca8-11e6-a82a-e3c47f92c8bd.png" alt="列式存储上检索的执行计划"></p>
+<blockquote>
+<p>The extra IO cost for the row-format query is therefore the time it takes to read all those extra columns. Let’s assume the table is 10 columns wide, ten million rows long and each value is 4 bytes, which are all conservative estimates. Then there is an extra 8 <em> 1M </em> 4 bytes, or 32MB of extra data read, which is ~3.20s on a query that would likely otherwise take 800ms; an overhead of 300%. When disks are less performant, or column widths wider, the effect becomes exaggerated.</p>
+</blockquote>
+<p>从上面的介绍我们可以发现，行式存储的场景下，读取那些额外列的行为便是那些（在分析任务的场景不应该有的）额外的 IO 代价。我们可以保守地假设有一张 10 列、1 千万行、每个数值有 4 bytes 的表。（这种情况下检索该表某列的全部数据时，）就会有额外的 8 <em> 1000000 </em> 4 bytes，或者说 32 MB 的额外数据需要读取——这将导致一个 800 ms 就可以执行完的检索最后会花上 3.2 s；接近三倍的额外性能损耗。进一步地，当磁盘性能不佳，或者表更宽时，这种负面影响会坏到夸张。</p>
+<blockquote>
+<p>This, then, is the basic idea of columnar storage: we recognise that analytical workloads rarely require full scans of all table data, but do often require full scans of a small subset of the columns, and so we arrange to make column scans cheap at the expense of extra cost reading individual rows.</p>
+</blockquote>
+<p>这就又引出了列式存储的基本思想：我们认识到了在分析工作的场景下几乎很少需要获取一张表的全列数据，而是常常只读取一小部分列的数据，所以我们牺牲了读取整行数据的效率，变通为了让列的读取变得简单高效。</p>
+<blockquote>
+<h3 id="The-Cost-of-Columnar"><a href="#The-Cost-of-Columnar" class="headerlink" title="The Cost of Columnar"></a>The Cost of Columnar</h3></blockquote>
+<h3 id="行式存储的效率问题"><a href="#行式存储的效率问题" class="headerlink" title="行式存储的效率问题"></a>行式存储的效率问题</h3><blockquote>
+<p>Is this a free lunch? Should every analytical database go out and change every file format to be column-major? Obviously the story is more complicated than that. There are some query archetypes that suffer when data is stored in a columnar format.</p>
+</blockquote>
+<p>列式存储是一次“免费的午餐”吗？是否每一个用于分析工作的数据库都应该把每一个存储文件变为列式的？显然这些问题并不那么好回答。实际上，存在一些检索，在列式存储的情况下表现不佳。</p>
+<blockquote>
+<p>The obvious drawback is that it is expensive to reassemble a row, since the separate values that comprise it are spread far across the disk. Every column included in a projection implies an extra disk seek, and this can add up when the projectivity of a query is high. Therefore, for highly projective queries, row-major formats can be more efficient (and therefore columnar formats are not strictly better than row-major storage even from a pure IO perspective).</p>
+</blockquote>
+<p>一个显而易见的缺点是，（利用列的值）重新组成一行的代价很大，这是因为构成某行的列的值是分布在磁盘的不同的地方的。映射（projection）中包含的每一列都预示着一次额外的磁盘寻道，而且这个代价还会在检索的映射率（projectivity）很高时变得更大。因此，对于映射率很高的检索，行式存储的效率会更高（所以列式存储在纯粹的 IO 角度下来看，也并不是一定比行式存储要优秀）。</p>
+<blockquote>
+<p>There are more subtle repercussions of each row being scattered across the disk. When a row-major format is read into memory, and ultimately into CPU cache, it is in a format that permits cheap reference to multiple columns at a time. Row-major formats have good in-memory spatial locality, and there are common operations that benefit enormously from this.</p>
+</blockquote>
+<p>还有更多的因行被分散到磁盘的各个地方而引起的问题。当行式存储的数据被读入内存，直至最终读入 CPU 缓存时，CPU 获取一次同时获取多行数据是很方便的。行式存储拥有较好的空间本地性（spatial locality），而且有一些常见的操作因它获利。</p>
+<blockquote>
+<p>For example, a query that selects the sum of two columns can sometimes be executed (once the data is in memory) faster on row-major formats, since the columns are almost always in the same cache line for each row. Columnar representations are less well suited; each column must be brought into memory at the same time and moved through in lockstep (yet this is still not cache efficient if each column is ordered differently), or the initial column must be scanned, each value buffered and then the second column scanned separately to complete the half-finished output tuple.</p>
+</blockquote>
+<p>举个例子，因为在行式存储下，同行两列总是同时存在于同一块缓存行中，所以计算这两列综合的检索语句执行起来（一旦数据已经读取入内存）会更快。而列式存储则相对地不适合这个场景；（在列式存储的形式下）每一列都必须同时加载进内存并且在之上同步地偏移、读取（然而如果每一列的数据按照不同的方式排序的话，这种情况下还不是做不到缓存友好），或者先扫描第一个列，并缓存它的每一个数值，然后将第二行的数据扫描进内存来补完那完成了一半的结果。</p>
+<blockquote>
+<p>The same general problem arises when preparing each tuple to write out as a result of (non-aggregating) query. Selecting several columns at once requires ‘row reconstruction’ at some point in the query lifecycle. Deciding when to do this is a complicated process, and (as we shall see) the literature has not yet developed a good rule of thumb. Many databases are row-major internally, and therefore a columnar format is transposed into a row-major one relatively early in the scanning process. As described above, this can require buffering half-constructed tuples in memory. For this reason, columnar formats are often partiioned into ‘row-groups’; each column chunk N contains rows (K<em>N) to ((K+1) </em> N). This reduces the amount of buffering required, at the cost of a few more disk seeks.</p>
+</blockquote>
+<p>另一个（在使用列式存储时）比较常见的问题发生在准备将每一个元组作为（非聚合式的）检索的结果写出时。SELECT 几列的检索在被执行的生命周期内的某一个时间点时需要进行“row reconstruction”的处理。决定何时进行这一步是一个复杂的过程，而且（正如我们将要看到的一样）学术界（存疑，原文为 the literature）页还并没有探索出优秀的办法。许多数据库在内部实现时采用的是行式存储，因此列式存储的数据在早期的数据扫描过程中就会被转变成行式的。真如之前描述的那样，这就可能会需要在内存中缓存构建了一般的结果元组。因为这些原因，列式存储的数据经常会被分区为“row-groups”；每一个分区块会包含第 (K<em>N) 到 ((K+1) </em> N) 行的数据。这种做法通过增加一定的磁盘寻道次数来减少了需要缓存的数据量。</p>
+<blockquote>
+<h3 id="Further-Aspects-of-Columnar-Storage"><a href="#Further-Aspects-of-Columnar-Storage" class="headerlink" title="Further Aspects of Columnar Storage"></a>Further Aspects of Columnar Storage</h3></blockquote>
+<h3 id="列式存储进阶考"><a href="#列式存储进阶考" class="headerlink" title="列式存储进阶考"></a>列式存储进阶考</h3><blockquote>
+<h4 id="Fully-column-oriented-execution-engines"><a href="#Fully-column-oriented-execution-engines" class="headerlink" title="Fully column-oriented execution engines"></a>Fully column-oriented execution engines</h4></blockquote>
+<h4 id="面向列式存储的执行引擎"><a href="#面向列式存储的执行引擎" class="headerlink" title="面向列式存储的执行引擎"></a>面向列式存储的执行引擎</h4><blockquote>
+<p>Relevant papers:</p>
+<ol>
+<li><a href="http://people.csail.mit.edu/tdanford/6830papers/stonebraker-cstore.pdf" target="_blank" rel="external">C-Store: A Column-oriented DBMS</a></li>
+<li><a href="http://vldb.org/pvldb/vol5/p1790_andrewlamb_vldb2012.pdf" target="_blank" rel="external">The Vertica Analytic Database: C-Store 7 Years Later</a></li>
+<li><a href="http://db.lcs.mit.edu/projects/cstore/abadiicde2007.pdf" target="_blank" rel="external">Materialization Strategies in a Column-Oriented DBMS</a></li>
+<li><a href="http://db.csail.mit.edu/projects/cstore/VLDB06.pdf" target="_blank" rel="external">Performance Tradeoffs in Read-Optimized Databases</a></li>
+<li><a href="http://db.csail.mit.edu/projects/cstore/abadi-sigmod08.pdf" target="_blank" rel="external">Column-Stores vs. Row-Stores: How Different Are They Really?</a></li>
+</ol>
+</blockquote>
+<p>相关文献：</p>
+<ol>
+<li><a href="http://people.csail.mit.edu/tdanford/6830papers/stonebraker-cstore.pdf" target="_blank" rel="external">C-Store: A Column-oriented DBMS</a></li>
+<li><a href="http://vldb.org/pvldb/vol5/p1790_andrewlamb_vldb2012.pdf" target="_blank" rel="external">The Vertica Analytic Database: C-Store 7 Years Later</a></li>
+<li><a href="http://db.lcs.mit.edu/projects/cstore/abadiicde2007.pdf" target="_blank" rel="external">Materialization Strategies in a Column-Oriented DBMS</a></li>
+<li><a href="http://db.csail.mit.edu/projects/cstore/VLDB06.pdf" target="_blank" rel="external">Performance Tradeoffs in Read-Optimized Databases</a></li>
+<li><a href="http://db.csail.mit.edu/projects/cstore/abadi-sigmod08.pdf" target="_blank" rel="external">Column-Stores vs. Row-Stores: How Different Are They Really?</a></li>
+</ol>
+<blockquote>
+<p>In this post, I’ve talked mostly about the benefits of columnar storage for scans – query operators that read data from disk, but whose ultimate output is a batch of rows for the rest of the query plan to operate on. In fact, columnar data can be integrated into pretty much every operator in a query execution engine. C-Store, the research project precursor to Vertica, explored a lot of the consequences of keeping data in columns until later on in the query plan. Eventually, of course, the columns have to be converted to rows, since the user expects a result in row-major format. The choice of when to perform this conversion is called late or early materialisation; viewed this way column-stores and row-stores can be considered two points on a spectrum of early to late materialisation strategies. Materialisation is studied in detail in the materialisation strategies paper above. Their conclusions are that the correct time to construct a tuple depends on the query plan (two broad patterns are considered: pipelining and parallel scans) and the query selectivity. Unfortunately, supporting both strategies would involve significant implementation cost – each operator would have to support two interfaces, and two parallel execution engines would effectively be frankensteined together. In general, late materialisation can lead to significant advantages: for example, by delaying the cost of reconstructing a tuple, it can be avoided if the tuple is ultimately filtered out by a predicate.</p>
+</blockquote>
+<p>在这篇文章中，我大篇幅地介绍了列式存储给 scan 操作——那些从磁盘读取数据，但最终输出是一系列将交由 query plan 剩下的操作使用的一行行数据的操作——所带来的好处。实际上，列式存储是可以集成进一个 query execution engine 的几乎每一步的处理中去的。C-Store，Vertica 的前身研究项目，探索了许多在 query plan 的后期处理过程中仍然保持列式存储格式的数据的后续影响。当然，最终这些列式的数据还是会被转成行式的，这是因为用户是期待一个行式的结果的。基于何时进行这个转换，它被相应地被称为 late materialisation 或 early materialisation；从这方面看来，行式存储和列式存储可以被认为是 early materialisation 和 late materialisation 这两个相对的策略的两种极端。Materialisation 在上面列出的和它相关的文献中有详细介绍。他们的结论是，构建元组的正确时间点取决于 query plan（两种模式被考虑：pipelining scan 和 parallel scan） 和 query selectivity。不幸的是，同时支持两种策略会导致实现上的代价——每一个（query plan 中的）operator 都不得不支持两种接口，而且两个并行执行引擎也得被用各种奇淫巧计高效地组合在一起。通常，late materialisation 会带来明显的优势：例如，通过延迟重建元组的工作，这一步可以在这个元组被 predicate 过滤掉时抛弃掉。</p>
+<blockquote>
+<p>The difference between row-based and columnar execution engines is studied in the Performance Tradeoffs… and Column-Stores vs. Row-Stores… papers. The former takes a detailed look at when each strategy is superior – coming out in favour mostly of column-stores, but only with simple queries and basic query plans. The latter tries to implement common column-store optimisations in a traditional row-store, without changing the code. This means a number of increasingly brittle hacks to emulate columnar storage.</p>
+</blockquote>
+<p>基于列式的 execution engine 与基于行式的之间的区别在性能取舍以及关于行式存储、列式存储的文献上有相应研究。前者详细地考察了何时哪个策略更好——得出来的结果大体上偏向于列式存储，但仅仅是在简单查询和基本的 query plan 的情况下。后者则尝试在不更改代码的前提下，去实现在传统的行式存储的基础上做出一些列式存储的优化。这意味着运用一系列增加系统碎片化的 hack 来模拟列式存储。</p>
+<blockquote>
+<h4 id="Compression"><a href="#Compression" class="headerlink" title="Compression"></a>Compression</h4><p>Relevant papers:</p>
+<ol>
+<li><a href="http://db.lcs.mit.edu/projects/cstore/abadisigmod06.pdf" target="_blank" rel="external">Integrating Compression and Execution on Column-Oriented Database Systems</a></li>
+</ol>
+</blockquote>
+<h4 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h4><p>相关文献：</p>
+<ol>
+<li><a href="http://db.lcs.mit.edu/projects/cstore/abadisigmod06.pdf" target="_blank" rel="external">Integrating Compression and Execution on Column-Oriented Database Systems</a></li>
+</ol>
+<blockquote>
+<p>A column of values drawn from the same set (like item price, say) is likely to be highly amenable to compression since the values contained are similar, and often identical. Compressing a column has at least two significant advantages on IO cost: less space is required on disk, and less IO required to bring a column into memory (at the cost of some CPU to decompress which is usually going spare). Some compression formats – for example run-length encoding – allow execution engines to operate on the compressed data directly, filtering large chunks at a time without first decompressing them. This is another advantage of late materialisation – by keeping the data compressed until late in the query plan, these optimisations become available to many operators, not just the scan.</p>
+</blockquote>
+<p>从同一个集合（例如价格）内获得的一列的值往往很可能是高度可压缩的，这是因为这些值都很类似，甚至常常是相等的。压缩一列的数据至少有两个对 IO 而言显而易见的优势：在磁盘上占用更少的空间，以及将一列数据读入内存时需要更少的 IO（以占用一些通常是闲置状态的 CPU 做解压缩的工作为代价）。有一些压缩格式——例如游程编码（run-length encoding）——能够让 execution engine 直接操作压缩后的数据，从而可以在没有线解压缩它们的情况下一次性过滤掉大量的数据。这是另外一个 late materialisation 带来的好处——通过在 query plan 的早期几步工作中一直让数据处于压缩状态，这些优化变得能够让许多 operator 利用，而不仅仅是 scan。</p>
+<blockquote>
+<h4 id="Hybrid-approaches"><a href="#Hybrid-approaches" class="headerlink" title="Hybrid approaches"></a>Hybrid approaches</h4><p>Relevant papers:</p>
+<ol>
+<li><a href="http://www.vldb.org/conf/2001/P169.pdf" target="_blank" rel="external">Weaving Relations for Cache Performance</a></li>
+</ol>
+</blockquote>
+<h4 id="两者混用"><a href="#两者混用" class="headerlink" title="两者混用"></a>两者混用</h4><p>相关文献：</p>
+<ol>
+<li><a href="http://www.vldb.org/conf/2001/P169.pdf" target="_blank" rel="external">Weaving Relations for Cache Performance</a></li>
+</ol>
+<blockquote>
+<p>Since neither row-major nor column-major is strictly superior on every workload, it’s natural that some research has been done into hybrid approaches that can achieve the best of both worlds. The most commonly known approach is PAX – Partition Attributes Across – which splits the table into page-sized groups of rows, and inside those groups formats the rows in column-major order. This is the same approach as the row-groups used to prevent excessive buffering described earlier, but this is not the aim of PAX; with PAX the original intention was to make CPU processing more efficient by having individual columns available contiguously to perform filtering, but also to have all the columns for a particular row nearby inside a group to make tuple reconstruction cheaper. The result of this approach is that IO costs don’t go down (because each row-group is only a page long, and is therefore read in its entirety), but reconstruction and filtering is cheaper than for true columnar formats.</p>
+</blockquote>
+<p>既然列式存储和行式存储在每种场景下并不是都能由于对方，自然而然就有一些想利用两者优点的混合方案相关的研究。最常见的一种方案是 PAX——Partition Attributes Across——这种方案将表分成了以页的大小来划分的行组成的组，而在这些组里面数据则会以列的方式组织。这和之前说过的用于提高缓存使用效率的以行组织数据的方案相同，但提高缓存使用效率并不是 PAX 的目标；PAX 的初始目标是为了让 CPU 能够因一列的数据都（在 CPU 缓存中）可以便利地获取到而高效的去过滤数据，但同时每一行的所有列也同时在一个组里，进而可以高效地去重建元组。这个解决方案的结果是 IO 的代价并没有减少（因为没有一个组只有一个页面的长度，并且因而要一整个地读取），但重建和过滤的过程相较纯列式存储的方案而言代价更小。</p>
+</div></article></div></section><footer><div class="paginator"><a href="/2016/06/10/configuration-in-hadoop/" class="prev">PREV</a><a href="/2014/12/27/let-us-talk-about-objc-properties/" class="next">NEXT</a></div><div data-thread-key="2015/11/24/annotations-on-paper-trail-columnar-storage/" data-title="【译注】Columnar Storage - 列式存储" data-url="http://bachiscoding.com/2015/11/24/annotations-on-paper-trail-columnar-storage/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"bachiscoding"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><div class="copyright"><p>© 2015 - 2016 <a href="http://bachiscoding.com">winiex</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script></body></html>

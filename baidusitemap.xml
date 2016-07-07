@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2016/07/07/octotree-plugin-for-github-in-chrome/</loc>
+    <lastmod>2016-07-06T16:34:39.143Z</lastmod>
+    <data>
+        <display>
+        <title>Octotree：在 Chrome 里用树状的方式浏览 Github 的文件</title>
+        <pubTime>2016-07-06T16:17:39.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="tools" url="http://bachiscoding.com/categories/tools/"/>
+          
+             
+              <breadCrumb title="github" url="http://bachiscoding.com/categories/tools/github/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2016/06/10/configuration-in-hadoop/</loc>
+    <lastmod>2016-07-06T16:12:41.984Z</lastmod>
+    <data>
+        <display>
+        <title>Hadoop 中的 Configuration</title>
+        <pubTime>2016-06-09T16:24:41.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="hadoop" url="http://bachiscoding.com/categories/hadoop/"/>
+          
+             
+              <breadCrumb title="java" url="http://bachiscoding.com/categories/hadoop/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2014/10/21/the-way-of-becoming-a-newbie-designer/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>成为一个新手设计师</title>
+        <pubTime>2014-10-21T13:18:53.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Design" url="http://bachiscoding.com/categories/Design/"/>
+          
+             
+              <breadCrumb title="Thoughts" url="http://bachiscoding.com/categories/Design/Thoughts/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2013/04/29/thoughts-about-efficiency/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>人的效率还是机器的效率？</title>
+        <pubTime>2013-04-29T13:10:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Thoughts" url="http://bachiscoding.com/categories/Thoughts/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2013/04/25/learning-simplecv-the-basics/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>安装 SimpleCV 以及 Hello World 程序</title>
+        <pubTime>2013-04-25T05:50:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Computer Vision" url="http://bachiscoding.com/categories/Computer-Vision/"/>
+          
+             
+              <breadCrumb title="SimpleCV" url="http://bachiscoding.com/categories/Computer-Vision/SimpleCV/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2013/05/10/what-personalities-should-multi-field-experts-have/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>擅长三四门不同领域学科的高人通常具备哪些特质？</title>
+        <pubTime>2013-05-10T13:34:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Thoughts" url="http://bachiscoding.com/categories/Thoughts/"/>
+          
+             
+              <breadCrumb title="Zhihu" url="http://bachiscoding.com/categories/Thoughts/Zhihu/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2014/10/16/bash-function-to-get-gitignore-easily/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>用于获取 .gitignore 的 Bash 命令</title>
+        <pubTime>2014-10-16T14:02:03.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Shell" url="http://bachiscoding.com/categories/Shell/"/>
+          
+             
+              <breadCrumb title="Git" url="http://bachiscoding.com/categories/Shell/Git/"/>
+          
+             
+              <breadCrumb title="Tools" url="http://bachiscoding.com/categories/Shell/Git/Tools/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2013/04/21/tools-about-computer-vision-and-image-processing/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>和 Computer Vision、Image Processing 有关的工具</title>
+        <pubTime>2013-04-21T13:03:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Computer Vision" url="http://bachiscoding.com/categories/Computer-Vision/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2014/10/19/microsoft-natural-ergonomic-keyboard-4000-zoom-to-scroll-on-mac-os-x/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>在 Mac OS X 上修改 Microsoft Natural Ergonomic 4000 的 Zoom 键为 Scroll 键</title>
+        <pubTime>2014-10-19T08:13:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Keyboard" url="http://bachiscoding.com/categories/Keyboard/"/>
+          
+             
+              <breadCrumb title="Tools" url="http://bachiscoding.com/categories/Keyboard/Tools/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2013/04/22/learning-simplecv-draw-image-histogram/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>利用 SimpleCV 绘制图片的色深分布直方图</title>
+        <pubTime>2013-04-22T12:29:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Computer Vision" url="http://bachiscoding.com/categories/Computer-Vision/"/>
+          
+             
+              <breadCrumb title="SimpleCV" url="http://bachiscoding.com/categories/Computer-Vision/SimpleCV/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2014/12/15/when-will-layoutsubviews-be-invoked/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>关于 UIView 的 layoutSubviews 方法</title>
+        <pubTime>2014-12-15T13:05:29.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="programming" url="http://bachiscoding.com/categories/programming/"/>
+          
+             
+              <breadCrumb title="iOS" url="http://bachiscoding.com/categories/programming/iOS/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2014/11/11/relationship-between-anchor-point-and-position-property-of-calayer/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>CALayer 的 position 属性与 anchorPoint 属性间的关系</title>
+        <pubTime>2014-11-11T08:10:25.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="iOS" url="http://bachiscoding.com/categories/iOS/"/>
+          
+             
+              <breadCrumb title="programming" url="http://bachiscoding.com/categories/iOS/programming/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2014/12/26/some-thoughts-on-quicksort/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>关于快速排序算法的一些想法</title>
+        <pubTime>2014-12-25T16:52:01.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="computer science" url="http://bachiscoding.com/categories/computer-science/"/>
+          
+             
+              <breadCrumb title="algorithm" url="http://bachiscoding.com/categories/computer-science/algorithm/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2013/04/23/what-should-programmer-do-when-facing-bottleneck/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>技术人员初入门，该如何突破早期瓶颈？</title>
+        <pubTime>2013-04-23T13:49:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Thoughts" url="http://bachiscoding.com/categories/Thoughts/"/>
+          
+             
+              <breadCrumb title="Zhihu" url="http://bachiscoding.com/categories/Thoughts/Zhihu/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2014/12/27/let-us-talk-about-objc-properties/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>让我们来谈谈 @property</title>
+        <pubTime>2014-12-27T06:56:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="programming" url="http://bachiscoding.com/categories/programming/"/>
+          
+             
+              <breadCrumb title="objective-c" url="http://bachiscoding.com/categories/programming/objective-c/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bachiscoding.com/2015/11/24/annotations-on-paper-trail-columnar-storage/</loc>
+    <lastmod>2016-07-06T16:02:43.475Z</lastmod>
+    <data>
+        <display>
+        <title>【译注】Columnar Storage - 列式存储</title>
+        <pubTime>2015-11-24T15:16:22.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+    
+  <url>
+    <loc>http://bachiscoding.com/2013/06/10/fix-arch-linux-windows-dual-boot-on-a-machine-with-uefi/</loc>
+    <lastmod>2016-06-27T20:37:16.067Z</lastmod>
+    <data>
+        <display>
+        <title>在 UEFI 机器上修复了 Arch Linux 和 Windows 8 的双引导</title>
+        <pubTime>2013-06-10T14:39:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="UEFI" url="http://bachiscoding.com/categories/UEFI/"/>
+          
+             
+              <breadCrumb title="Arch Linux" url="http://bachiscoding.com/categories/UEFI/Arch-Linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+</urlset>

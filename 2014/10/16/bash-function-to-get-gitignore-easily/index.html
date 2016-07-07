@@ -1,0 +1,30 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 用于获取 .gitignore 的 Bash 命令 · Bach is coding</title><meta name="description" content="用于获取 .gitignore 的 Bash 命令 - winiex"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="stylesheet" href="http://fonts.useso.com/css?family=Source+Sans+Pro:400,600" type="text/css"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/winiex" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">用于获取 .gitignore 的 Bash 命令</h1><div class="post-info">Oct 16, 2014</div><div class="post-content"><p>新开的项目，按照常理出牌的话，一般都是需要使用 Git 来进行版本控制，以免代码数据丢失的。而使用 Git 的时候，按照常理出牌的话，一般是要给项目添加一个 <a href="http://git-scm.com/docs/gitignore" target="_blank" rel="external">.gitignore 文件</a>，从而使那些不该纳入版本控制的文件能够被 Git 排除在外的。例如，使用 Python 开发的项目一般都需要将 .pyc 文件排除在外；使用编译型语言来开发的项目，一般会将可执行程序、中间编译结果文件等排除在外。</p>
+<p>不加 .gitignore 的话，一般而言后果是很严重的。之前我刚开始接触 Python 开发的时候，就由于没有考虑这些，最后将所有 .pyc 文件都纳入了版本管理，到了后来发现了这个问题后，才不得不手动删除所有目录下的 .pyc 文件：</p>
+<a id="more"></a>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name *pyc | xargs rm</span><br></pre></td></tr></table></figure>
+<p>更极端的例子发生在我认识的一位哥们身上。那哥们是做 iOS 开发的，习惯也很不错，所以给自己的代码加上了版本管理。可是有一天他忽然发现自己线上的 Git 仓库已经占用了几百兆，而且每次 push 的时候都需要上传很多东西。后来跑过来问我，我和他一起看了一下，最后确定就是把 XCode 的编译结果都纳入版本管理了。</p>
+<p><strong>好同学一定会给自己的项目添加 .gitignore</strong>。</p>
+<p>那么问题来了。对于不同的项目，因为使用的语言、工具（特别是 IDE）不同，在开发过程中项目所产生的无需加入版本管理的文件就也不同。 如果不能给自己的项目添加一个完善的 .gitignore，迟早有一些没有考虑到的文件会有可能被无意识地加入到版本控制中。为了解决这个问题，我之前一直通过 Google 来搜索相关的文章，最后也总能找到一些符合要求的从而借用过来。不过这种方法终究有点效率低下，不够自动化，所以我也一直不是很满意。</p>
+<p>纠结的情况一直持续着，直到今天我发现了 <a href="https://www.gitignore.io/" target="_blank" rel="external">gitignore.io</a> 这个服务。gitignore.io 就是专门用来提供完善的 .gitignore 文件服务的。你在它的搜索框中输入符合自己开发情况的搜索条件之后，它就会提供最适合于你的项目的 .gitignore。譬如如果我是 iOS 开发者的话就会搜索：</p>
+<img src="http://o9fv3ui6e.bkt.clouddn.com/fb94069e-3ca6-11e6-a49a-6be3d89c88e1.png" class="center" width="600">
+<p>按下 Generate 后，最终得到如下结果：</p>
+<img src="http://o9fv3ui6e.bkt.clouddn.com/04e05766-3ca7-11e6-8177-874c4229f343.png" class="center" width="600">
+<p>很赞的想法，很赞的实现！更赞的是，它满足了程序员切实的需求。不过这里还有一个不是很方便的地方：我们只能去 Web 页面拷贝相关的内容，然后再粘贴进我们的 .gitignore 文件中——用过 Vim 的同学都应该很清楚，这个过程是很“赞”的。</p>
+<p>所以，我们需要在 Terminal 中就能够直接获取到 gitignore.io 的内容。最好，还能够直接把这些内容重定向到 .gitignore 文件中，一行命令搞定。很幸运的是，已经<a href="http://alias.sh/gitignoreio" target="_blank" rel="external">有人实现了这个想法</a>，不幸的是，这个实现无法工作 :(。</p>
+<p>嗯，那我就把它修复一下吧。所以，最终的结果是<a href="https://gist.github.com/Winiex/3a2daad31e513d8e1c8b" target="_blank" rel="external">这样的</a>。你只需要将：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> git-ignore-<span class="function"><span class="title">io</span></span>() &#123;</span><br><span class="line">    curl https://www.gitignore.io/api/<span class="variable">$@</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>加入你的 .bashrc 文件，然后重启 Terminal，输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git-ignore-io python &gt; .gitignore</span><br></pre></td></tr></table></figure>
+<p>就可以在你的 Python 项目中“一键”加入完备的 .gitignore 了。</p>
+<p>以后妈妈再也不会担心我把无关文件放到版本控制中去了。:)</p>
+</div></article></div></section><footer><div class="paginator"><a href="/2014/10/19/microsoft-natural-ergonomic-keyboard-4000-zoom-to-scroll-on-mac-os-x/" class="prev">PREV</a><a href="/2013/06/10/fix-arch-linux-windows-dual-boot-on-a-machine-with-uefi/" class="next">NEXT</a></div><div data-thread-key="2014/10/16/bash-function-to-get-gitignore-easily/" data-title="用于获取 .gitignore 的 Bash 命令" data-url="http://bachiscoding.com/2014/10/16/bash-function-to-get-gitignore-easily/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"bachiscoding"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><div class="copyright"><p>© 2015 - 2016 <a href="http://bachiscoding.com">winiex</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script></body></html>
