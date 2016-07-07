@@ -315,8 +315,11 @@ header .nav-list-item a {
 }
 
 .archive {
-    max-width: 500px;
+    max-width: 1000px;
     margin: 5em auto
+}
+
+a {
 }
 
 .archive .post-item {
@@ -324,7 +327,7 @@ header .nav-list-item a {
 }
 
 .archive .post-time,.archive .post-title-link {
-    font-size: 1rem
+    font-size: 20px;
 }
 
 .archive .post-title-link {
@@ -382,22 +385,30 @@ header .nav-list-item a {
     content: "#";
     color: #42b983;
     position: absolute;
-    left: -0.7em;
+    left: -1.0em;
     top: -4px;
     font-size: 1.2em;
     font-weight: bold
+}
+
+.post-content h3:before {
+    content: "";
 }
 
 .post-content h4:before,.post-content h5:before,.post-content h6:before {
     content: ""
 }
 
-.post-content h2,.post-content h3 {
-    font-size: 22px
+.post-content h2 {
+    font-size: 24px;
+}
+
+.post-content h3 {
+    font-size: 22px;
 }
 
 .post-content h4,.post-content h5,.post-content h6 {
-    font-size: 18px
+    font-size: 20px
 }
 
 .post-content a {
@@ -470,6 +481,10 @@ code,pre {
     font-size: 0.8em;
     background-color: #f8f8f8;
     font-family: 'Roboto Mono', Monaco, courier, monospace
+}
+
+pre {
+    background-color: #3a3c48
 }
 
 .highlight {
@@ -584,15 +599,23 @@ code,pre {
 }
 
 pre {
-    color: #525252
+    color: #fccc31
+}
+
+span.comment {
+    color: #b0bec3
+}
+
+span.line span.line {
+    color: #b0bec3
 }
 
 pre .function .keyword,pre .constant {
-    color: #0092db
+    color: #c3c09b
 }
 
 pre .keyword,pre .attribute {
-    color: #e96900
+    color: #c3c09b
 }
 
 pre .number,pre .literal {
@@ -600,7 +623,7 @@ pre .number,pre .literal {
 }
 
 pre .tag,pre .tag .title,pre .change,pre .winutils,pre .flow,pre .lisp .title,pre .clojure .built_in,pre .nginx .title,pre .tex .special {
-    color: #2973b7
+    color: #c3c09b
 }
 
 pre .symbol,pre .symbol .string,pre .value,pre .regexp {
@@ -615,7 +638,7 @@ pre .tag .value,pre .string,pre .subst,pre .haskell .type,pre .preprocessor,pre 
     color: #42b983
 }
 
-pre .comment,pre .java .annotation,pre .python .decorator,pre .template_comment,pre .pi,pre .doctype,pre .shebang,pre .apache .sqbracket,pre .tex .formula {
+pre .java .annotation,pre .python .decorator,pre .template_comment,pre .pi,pre .doctype,pre .shebang,pre .apache .sqbracket,pre .tex .formula {
     color: #b3b3b3
 }
 

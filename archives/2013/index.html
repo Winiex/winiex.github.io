@@ -1,1 +1,453 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Bach is coding</title><meta name="description" content="A Blog Powered By Hexo"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="stylesheet" href="http://fonts.useso.com/css?family=Source+Sans+Pro:400,600" type="text/css"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/winiex" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><section class="container"><div class="archive"><h2 class="archive-year">2013</h2><div class="post-item"><div class="post-info">Jun 10, 2013</div><a href="/2013/06/10/fix-arch-linux-windows-dual-boot-on-a-machine-with-uefi/" class="post-title-link">在 UEFI 机器上修复了 Arch Linux 和 Windows 8 的双引导</a></div><div class="post-item"><div class="post-info">May 10, 2013</div><a href="/2013/05/10/what-personalities-should-multi-field-experts-have/" class="post-title-link">擅长三四门不同领域学科的高人通常具备哪些特质？</a></div><div class="post-item"><div class="post-info">Apr 29, 2013</div><a href="/2013/04/29/thoughts-about-efficiency/" class="post-title-link">人的效率还是机器的效率？</a></div><div class="post-item"><div class="post-info">Apr 25, 2013</div><a href="/2013/04/25/learning-simplecv-the-basics/" class="post-title-link">安装 SimpleCV 以及 Hello World 程序</a></div><div class="post-item"><div class="post-info">Apr 23, 2013</div><a href="/2013/04/23/what-should-programmer-do-when-facing-bottleneck/" class="post-title-link">技术人员初入门，该如何突破早期瓶颈？</a></div><div class="post-item"><div class="post-info">Apr 22, 2013</div><a href="/2013/04/22/learning-simplecv-draw-image-histogram/" class="post-title-link">利用 SimpleCV 绘制图片的色深分布直方图</a></div><div class="post-item"><div class="post-info">Apr 21, 2013</div><a href="/2013/04/21/tools-about-computer-vision-and-image-processing/" class="post-title-link">和 Computer Vision、Image Processing 有关的工具</a></div></div></section><footer><div class="paginator"></div><div class="copyright"><p>© 2015 - 2016 <a href="http://bachiscoding.com">winiex</a>, unless otherwise noted.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script></body></html>
+  <!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  <meta name="baidu-site-verification" content="L2ReZqkQAB" />
+  
+  <title>Archives: 2013 | Bach is coding</title>
+  <meta name="author" content="winiex">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="Bach is coding"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="Bach is coding" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link href='http://cdn.webfont.youziku.com/webfonts/nomal/26464/46863/577e1611f629dc10aca7ef78.css' rel='stylesheet' type='text/css' />
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+  <body>  
+    <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Home</a>
+      <div class="collapse navbar-collapse nav-menu">
+        <ul class="nav navbar-nav">
+          
+          <li>
+            <a href="/archives" title="All the articles.">
+              <i class=""></i>Archives
+            </a>
+          </li>
+          
+          <li>
+            <a href="/about" title="About me.">
+              <i class=""></i>About
+            </a>
+          </li>
+          
+          <li>
+            <a href="/atom.xml" title="Subscribe me.">
+              <i class=""></i>RSS
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  
+    <div class="container">
+      <div class="content">
+         
+
+<!-- title -->
+<div class="page-header">
+  <h1 class="archive-title"><i class="fa fa-archive"></i> 2013</h1>
+</div>
+
+<div class="row page">
+  <!-- cols -->
+  
+  <div class="col-md-9">
+    
+
+      <div id="top_search"></div>
+
+      <div class="archive">
+        
+        
+        
+            
+            
+            <h4 class="archive-ul" data-toggle="collapse" data-target="#2016">2016<b class="caret"></b></h4>
+            <ul id="2016" class="collapse in">
+            
+        
+        <li class="listing-item">
+        <span class="date_class"> 2016-07-07 </span> &raquo;
+        
+           <span class="title"><a href="/2016/07/07/octotree-plugin-for-github-in-chrome/" >Octotree：在 Chrome 里用树状的方式浏览 Github 的文件</a></span>
+        
+        </li>            
+        
+        
+        
+        <li class="listing-item">
+        <span class="date_class"> 2016-06-10 </span> &raquo;
+        
+           <span class="title"><a href="/2016/06/10/configuration-in-hadoop/" >Hadoop 中的 Configuration</a></span>
+        
+        </li>            
+        
+        
+        
+            
+            </ul>
+            
+            
+            <h4 class="archive-ul" data-toggle="collapse" data-target="#2015">2015<b class="caret"></b></h4>
+            <ul id="2015" class="collapse in">
+            
+        
+        <li class="listing-item">
+        <span class="date_class"> 2015-11-24 </span> &raquo;
+        
+           <span class="title"><a href="/2015/11/24/annotations-on-paper-trail-columnar-storage/" >【译注】Columnar Storage - 列式存储</a></span>
+        
+        </li>            
+        
+        
+        
+            
+            </ul>
+            
+            
+            <h4 class="archive-ul" data-toggle="collapse" data-target="#2014">2014<b class="caret"></b></h4>
+            <ul id="2014" class="collapse in">
+            
+        
+        <li class="listing-item">
+        <span class="date_class"> 2014-12-27 </span> &raquo;
+        
+           <span class="title"><a href="/2014/12/27/let-us-talk-about-objc-properties/" >让我们来谈谈 @property</a></span>
+        
+        </li>            
+        
+        
+        
+        <li class="listing-item">
+        <span class="date_class"> 2014-12-26 </span> &raquo;
+        
+           <span class="title"><a href="/2014/12/26/some-thoughts-on-quicksort/" >关于快速排序算法的一些想法</a></span>
+        
+        </li>            
+        
+        
+        
+        <li class="listing-item">
+        <span class="date_class"> 2014-12-15 </span> &raquo;
+        
+           <span class="title"><a href="/2014/12/15/when-will-layoutsubviews-be-invoked/" >关于 UIView 的 layoutSubviews 方法</a></span>
+        
+        </li>            
+        
+        
+        
+        <li class="listing-item">
+        <span class="date_class"> 2014-11-11 </span> &raquo;
+        
+           <span class="title"><a href="/2014/11/11/relationship-between-anchor-point-and-position-property-of-calayer/" >CALayer 的 position 属性与 anchorPoint 属性间的关系</a></span>
+        
+        </li>            
+        
+        
+        
+        <li class="listing-item">
+        <span class="date_class"> 2014-10-21 </span> &raquo;
+        
+           <span class="title"><a href="/2014/10/21/the-way-of-becoming-a-newbie-designer/" >成为一个新手设计师</a></span>
+        
+        </li>            
+        
+        
+        
+        <li class="listing-item">
+        <span class="date_class"> 2014-10-19 </span> &raquo;
+        
+           <span class="title"><a href="/2014/10/19/microsoft-natural-ergonomic-keyboard-4000-zoom-to-scroll-on-mac-os-x/" >在 Mac OS X 上修改 Microsoft Natural Ergonomic 4000 的 Zoom 键为 Scroll 键</a></span>
+        
+        </li>            
+        
+        
+        
+        <li class="listing-item">
+        <span class="date_class"> 2014-10-16 </span> &raquo;
+        
+           <span class="title"><a href="/2014/10/16/bash-function-to-get-gitignore-easily/" >用于获取 .gitignore 的 Bash 命令</a></span>
+        
+        </li>            
+        
+        
+        
+            
+            </ul>
+            
+            
+            <h4 class="archive-ul" data-toggle="collapse" data-target="#2013">2013<b class="caret"></b></h4>
+            <ul id="2013" class="collapse in">
+            
+        
+        <li class="listing-item">
+        <span class="date_class"> 2013-06-10 </span> &raquo;
+        
+           <span class="title"><a href="/2013/06/10/fix-arch-linux-windows-dual-boot-on-a-machine-with-uefi/" >在 UEFI 机器上修复了 Arch Linux 和 Windows 8 的双引导</a></span>
+        
+        </li>            
+        
+        
+        
+        <li class="listing-item">
+        <span class="date_class"> 2013-05-10 </span> &raquo;
+        
+           <span class="title"><a href="/2013/05/10/what-personalities-should-multi-field-experts-have/" >擅长三四门不同领域学科的高人通常具备哪些特质？</a></span>
+        
+        </li>            
+        
+        
+        
+        <li class="listing-item">
+        <span class="date_class"> 2013-04-29 </span> &raquo;
+        
+           <span class="title"><a href="/2013/04/29/thoughts-about-efficiency/" >人的效率还是机器的效率？</a></span>
+        
+        </li>            
+        
+        
+        
+        <li class="listing-item">
+        <span class="date_class"> 2013-04-25 </span> &raquo;
+        
+           <span class="title"><a href="/2013/04/25/learning-simplecv-the-basics/" >安装 SimpleCV 以及 Hello World 程序</a></span>
+        
+        </li>            
+        
+        
+        
+        <li class="listing-item">
+        <span class="date_class"> 2013-04-23 </span> &raquo;
+        
+           <span class="title"><a href="/2013/04/23/what-should-programmer-do-when-facing-bottleneck/" >技术人员初入门，该如何突破早期瓶颈？</a></span>
+        
+        </li>            
+        
+        
+        
+        <li class="listing-item">
+        <span class="date_class"> 2013-04-22 </span> &raquo;
+        
+           <span class="title"><a href="/2013/04/22/learning-simplecv-draw-image-histogram/" >利用 SimpleCV 绘制图片的色深分布直方图</a></span>
+        
+        </li>            
+        
+        
+        
+        <li class="listing-item">
+        <span class="date_class"> 2013-04-21 </span> &raquo;
+        
+           <span class="title"><a href="/2013/04/21/tools-about-computer-vision-and-image-processing/" >和 Computer Vision、Image Processing 有关的工具</a></span>
+        
+        </li>            
+        
+        </ul>
+        </div>
+
+</div> <!-- col-md-9/col-md-12 -->
+
+
+<div class="col-md-3">
+    <div id="sidebar">
+    
+            
+    <div class="widget">
+        <h4>Categories</h4>
+        <ul class="tag_box inline list-unstyled">
+        
+            <li><a href="/categories/UEFI/Arch-Linux/">Arch Linux<span>1</span></a></li>
+        
+            <li><a href="/categories/Computer-Vision/">Computer Vision<span>3</span></a></li>
+        
+            <li><a href="/categories/Design/">Design<span>1</span></a></li>
+        
+            <li><a href="/categories/Shell/Git/">Git<span>1</span></a></li>
+        
+            <li><a href="/categories/Keyboard/">Keyboard<span>1</span></a></li>
+        
+            <li><a href="/categories/Shell/">Shell<span>1</span></a></li>
+        
+            <li><a href="/categories/Computer-Vision/SimpleCV/">SimpleCV<span>2</span></a></li>
+        
+            <li><a href="/categories/Design/Thoughts/">Thoughts<span>1</span></a></li>
+        
+            <li><a href="/categories/Thoughts/">Thoughts<span>3</span></a></li>
+        
+            <li><a href="/categories/Keyboard/Tools/">Tools<span>1</span></a></li>
+        
+            <li><a href="/categories/Shell/Git/Tools/">Tools<span>1</span></a></li>
+        
+            <li><a href="/categories/UEFI/">UEFI<span>1</span></a></li>
+        
+            <li><a href="/categories/Thoughts/Zhihu/">Zhihu<span>2</span></a></li>
+        
+            <li><a href="/categories/computer-science/algorithm/">algorithm<span>1</span></a></li>
+        
+            <li><a href="/categories/computer-science/">computer science<span>1</span></a></li>
+        
+            <li><a href="/categories/tools/github/">github<span>1</span></a></li>
+        
+            <li><a href="/categories/hadoop/">hadoop<span>1</span></a></li>
+        
+            <li><a href="/categories/iOS/">iOS<span>1</span></a></li>
+        
+            <li><a href="/categories/programming/iOS/">iOS<span>1</span></a></li>
+        
+            <li><a href="/categories/hadoop/java/">java<span>1</span></a></li>
+        
+            <li><a href="/categories/programming/objective-c/">objective-c<span>1</span></a></li>
+        
+            <li><a href="/categories/iOS/programming/">programming<span>1</span></a></li>
+        
+            <li><a href="/categories/programming/">programming<span>2</span></a></li>
+        
+            <li><a href="/categories/tools/">tools<span>1</span></a></li>
+        
+        </ul>
+    </div>
+
+
+        
+            
+<div class="widget">
+  <h4>Recent Posts</h4>
+  <ul class="entry list-unstyled">
+    
+      <li>
+        <a href="/2016/07/07/octotree-plugin-for-github-in-chrome/" ><i class="fa fa-file-o"></i>Octotree：在 Chrome 里用树状的方式浏览...</a>
+      </li>
+    
+      <li>
+        <a href="/2016/06/10/configuration-in-hadoop/" ><i class="fa fa-file-o"></i>Hadoop 中的 Configuration</a>
+      </li>
+    
+      <li>
+        <a href="/2015/11/24/annotations-on-paper-trail-columnar-storage/" ><i class="fa fa-file-o"></i>【译注】Columnar Storage - 列式存储</a>
+      </li>
+    
+      <li>
+        <a href="/2014/12/27/let-us-talk-about-objc-properties/" ><i class="fa fa-file-o"></i>让我们来谈谈 @property</a>
+      </li>
+    
+      <li>
+        <a href="/2014/12/26/some-thoughts-on-quicksort/" ><i class="fa fa-file-o"></i>关于快速排序算法的一些想法</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+        
+            
+<div class="widget">
+    <h4>Links</h4>
+    <ul class="blogroll list-unstyled">
+    
+        <li><i class=""></i><a href="https://github.com/winiex" title="Yield projects here." target="_blank"]);">Github</a></li>
+    
+        <li><i class=""></i><a href="https://twitter.com/WiniexNie" title="Yield rants here." target="_blank"]);">Twitter</a></li>
+    
+        <li><i class=""></i><a href="https://www.instagram.com/winiex/" title="Yield pictures here." target="_blank"]);">Instagram</a></li>
+    
+        <li><i class=""></i><a href="http://weibo.com/winiex" title="Yield nothing here." target="_blank"]);">Weibo</a></li>
+    
+        <li><i class=""></i><a href="mailto:winiex.nie@gmail.com" title="You yield stuff to me." target="_blank"]);">Email</a></li>
+    
+    </ul>
+</div>
+
+
+        
+    </div> <!-- sidebar -->
+</div> <!-- col-md-3 -->
+
+
+
+
+      </div>
+    </div>
+  
+    <div class="container-narrow">
+        <footer> <p>
+  &copy; 2016 winiex
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a>,<a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>,<a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a> and <a href="http://getbootstrap.com/" target="_blank">BOOTSTRA.386</a>. 
+     <br> Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind.386</a>.    
+</p>
+</footer>
+    </div> <!-- container-narrow -->
+  
+    
+
+
+    
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+
+    <script type="text/javascript">
+        $youziku.load(".row", "cabaaa95b43f427d9333ebc92a16d1e1", "Source-Han-Normal");
+        $youziku.draw();
+    </script>
+  </body>
+</html>
